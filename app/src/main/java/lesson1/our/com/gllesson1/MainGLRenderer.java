@@ -157,6 +157,8 @@ public class MainGLRenderer implements GLSurfaceView.Renderer {
      */
     @Override
     public void onDrawFrame(GL10 gl) {
+        // TODO: Calculate next scene objects states.
+
         glClear(GL_COLOR_BUFFER_BIT);
 
         drawTriangle();

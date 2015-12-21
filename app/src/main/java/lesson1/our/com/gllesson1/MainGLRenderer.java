@@ -141,7 +141,7 @@ public class MainGLRenderer implements GLSurfaceView.Renderer {
     /**
      * On rotation of the device, on changing size of the gl view
      *
-     * @param gl - unused gl version 1.0
+     * @param gl - unused gl context version 1.0
      * @param width - width of the drawing surface
      * @param height - height of the drawing surface
      */

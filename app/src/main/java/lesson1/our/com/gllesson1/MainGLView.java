@@ -9,6 +9,7 @@ public class MainGLView extends GLSurfaceView {
     private void construct(Context context)
     {
         setEGLContextClientVersion(2);
+        
         // Number of bits for rgba depth and stencil for open gl configuration
         setEGLConfigChooser(8, 8, 8, 8, 8, 0);
 

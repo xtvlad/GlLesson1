@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     {
         // The activity must call the GL surface view's onPause() on activity onPause().
         super.onPause();
-        glView.onResume();
+        glView.onPause();
     }
 }
 

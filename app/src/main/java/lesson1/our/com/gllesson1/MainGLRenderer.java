@@ -153,7 +153,7 @@ public class MainGLRenderer implements GLSurfaceView.Renderer {
     /**
      * On every frame drawing
      *
-     * @param gl - unused gl version 1.0
+     * @param gl - unused gl context version 1.0
      */
     @Override
     public void onDrawFrame(GL10 gl) {
@@ -177,12 +177,19 @@ public class MainGLRenderer implements GLSurfaceView.Renderer {
 
         glEnableVertexAttribArray(idxPosition);
         glBindBuffer(GL_ARRAY_BUFFER, idxVertBuffers[TRIANGLE_INDEX]);
+
+        // How to run over currently binded buffer
+        // variable in shader (on videocard) will receive variables from buffer - idxPosition variable
+        // how much elements pass to this variable - vertSize
+        // how much elements to skip to next set of variables - vertStride
+        // start from element - 0 (offset)
         glVertexAttribPointer(idxPosition, vertSize, GL_FLOAT, false, vertStride, 0);
 
         glEnableVertexAttribArray(idxColor);
         glBindBuffer(GL_ARRAY_BUFFER, idxColorBuffers[TRIANGLE_INDEX]);
         glVertexAttribPointer(idxColor, colorSize, GL_FLOAT, false, colorStride, 0);
 
+        // Pass model array as model-view-projection matrix to shader (on videocard program)
         glUniformMatrix4fv(idxMvp, 1, false, FloatBuffer.wrap(model));
 
         glDrawArrays(GL_TRIANGLES, 0, TRIANGLE_VERTEX_COUNT);

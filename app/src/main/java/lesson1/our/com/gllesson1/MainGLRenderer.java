@@ -26,9 +26,9 @@ public class MainGLRenderer implements GLSurfaceView.Renderer {
             // vertex 1 x y z
             0.0f, 1.0f, 0.0f,
             // vertex 2 x y z
-            -0.8f, -0.3f, 0.0f,
+            -1.0f, -1.0f, 0.0f,
             // vertex 3 x y z
-            0.8f, -0.3f, 0.0f
+            1.0f, -1.0f, 0.0f
     };
 
     private final float triangleColors[] = {
@@ -48,6 +48,8 @@ public class MainGLRenderer implements GLSurfaceView.Renderer {
     private int idxColor;
     private int[] idxVertBuffers;
     private int[] idxColorBuffers;
+
+    private float[] view;
 
     public MainGLRenderer(Context cntxt)
     {
@@ -148,6 +150,16 @@ public class MainGLRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         glViewport(0, 0, width, height);
+
+        view = new float[MAT_SIZE];
+
+        float fovy = 45.0f;
+        float aspect = width / (float)height;
+        float near = 1.0f;
+        float far = 20.0f;
+
+        Matrix.setIdentityM(view, 0);
+        Matrix.perspectiveM(view, 0, fovy, aspect, near, far);
     }
 
     /**
@@ -167,11 +179,13 @@ public class MainGLRenderer implements GLSurfaceView.Renderer {
     }
 
     private void drawTriangle() {
-        float model[]   = new float[MAT_SIZE];
-        int vertSize    = COORDINATE_COUNT;
-        int vertStride  = vertSize * BYTES_PER_FLOAT;
-        int colorSize   = COLOR_COUNT;
-        int colorStride = colorSize * BYTES_PER_FLOAT;
+        float model[]       = new float[MAT_SIZE];
+        float mvp[]         = new float[MAT_SIZE];
+        int vertSize        = COORDINATE_COUNT;
+        int vertStride      = vertSize * BYTES_PER_FLOAT;
+        int colorSize       = COLOR_COUNT;
+        int colorStride     = colorSize * BYTES_PER_FLOAT;
+        float model_z_shift = 5.0f;
 
         Matrix.setIdentityM(model, 0);
 
@@ -189,8 +203,11 @@ public class MainGLRenderer implements GLSurfaceView.Renderer {
         glBindBuffer(GL_ARRAY_BUFFER, idxColorBuffers[TRIANGLE_INDEX]);
         glVertexAttribPointer(idxColor, colorSize, GL_FLOAT, false, colorStride, 0);
 
+        Matrix.translateM(model, 0, 0, 0, -model_z_shift);
+        Matrix.multiplyMM(mvp, 0, view, 0, model, 0);
+
         // Pass model array as model-view-projection matrix to shader (on videocard program)
-        glUniformMatrix4fv(idxMvp, 1, false, FloatBuffer.wrap(model));
+        glUniformMatrix4fv(idxMvp, 1, false, FloatBuffer.wrap(mvp));
 
         glDrawArrays(GL_TRIANGLES, 0, TRIANGLE_VERTEX_COUNT);
     }
